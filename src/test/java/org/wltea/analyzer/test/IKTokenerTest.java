@@ -6,7 +6,7 @@ package org.wltea.analyzer.test;
 import java.io.IOException;
 import java.io.StringReader;
 
-import org.apache.lucene.analysis.tokenattributes.TermAttribute;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.wltea.analyzer.lucene.IKTokenizer;
 
 import junit.framework.TestCase;
@@ -22,7 +22,7 @@ public class IKTokenerTest extends TestCase {
 		IKTokenizer tokenizer = new IKTokenizer(new StringReader(t) , false);
 		try {
 			while(tokenizer.incrementToken()){
-				TermAttribute termAtt = tokenizer.getAttribute(TermAttribute.class);
+				CharTermAttribute termAtt = tokenizer.getAttribute(CharTermAttribute.class);
 				System.out.println(termAtt);				
 			}
 		} catch (IOException e) {

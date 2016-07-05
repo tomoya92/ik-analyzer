@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
@@ -494,7 +494,7 @@ public final class IKQueryParser {
 		
 		/**
 		 * 判断指定的lexeme能否被当前的branch接受
-		 * @param lexeme
+		 * @param _lexeme
 		 * @return 返回接受的形式
 		 */
 		private int checkAccept(Lexeme _lexeme){
@@ -1150,21 +1150,22 @@ public final class IKQueryParser {
 			}else {
 				throw new IllegalStateException("表达式异常, RangeQuery格式错误");
 			}
-			
-			return new TermRangeQuery(fieldNameEle.toString() , firstValue , lastValue , includeFirst , includeLast);
+
+			return TermRangeQuery.newStringRange(fieldNameEle.toString() , firstValue, lastValue , includeFirst , includeLast);
 		}
 		
 		/**
 		 * 组装Lucene Query
 		 * 处理关键字紧凑搜索
-		 * @param elements
+		 * @param fieldName
+		 * @param keyword
 		 * @return
 		 */
 		private Query luceneQueryParse(String fieldName , String keyword){
 			//截取头部^尾部$
 			keyword = keyword.substring(1 , keyword.length() - 1);
 			String luceneExp = fieldName + ":\"" + keyword + "\"";
-			QueryParser luceneQueryParser = new QueryParser(Version.LUCENE_30 , "" ,new IKAnalyzer());
+			QueryParser luceneQueryParser = new QueryParser("" ,new IKAnalyzer());
 			try {
 				Query lucenceQuery = luceneQueryParser.parse(luceneExp);
 				return lucenceQuery;
@@ -1173,8 +1174,7 @@ public final class IKQueryParser {
 			}								
 			return null;			
 		}
-		
-		
+
 		/**
 		 * 比较操作符优先级
 		 * @param e1

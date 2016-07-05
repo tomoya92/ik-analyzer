@@ -3,7 +3,9 @@
  */
 package org.wltea.analyzer.lucene;
 
+import java.io.BufferedReader;
 import java.io.Reader;
+import java.io.StringReader;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -26,7 +28,11 @@ public final class IKAnalyzer extends Analyzer {
 	public IKAnalyzer(){
 		this(false);
 	}
-	
+
+	protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
+		return new TokenStreamComponents(new IKTokenizer(reader, isMaxWordLength()));
+	}
+
 	/**
 	 * IK分词器Lucene Analyzer接口实现类
 	 * 
@@ -35,14 +41,6 @@ public final class IKAnalyzer extends Analyzer {
 	public IKAnalyzer(boolean isMaxWordLength){
 		super();
 		this.setMaxWordLength(isMaxWordLength);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.lucene.analysis.Analyzer#tokenStream(java.lang.String, java.io.Reader)
-	 */
-	@Override
-	public TokenStream tokenStream(String fieldName, Reader reader) {
-		return new IKTokenizer(reader , isMaxWordLength());
 	}
 
 	public void setMaxWordLength(boolean isMaxWordLength) {
